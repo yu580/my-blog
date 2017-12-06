@@ -80,23 +80,22 @@ function request(url, options) {
  * body 请求参数
  * config 配置数据
  */
-window.fetch = function (url, body, config = {}) {
-<<<<<<< HEAD
-=======
-    //后续需要处理body是数组的情况
->>>>>>> cb158cbd1f6a5fe41c2ed4cf940a2fe9687664d0
-    __defaultOptions.body = JSON.stringify(body)
-    Object.assign(config,__defaultOptions)
-    let fetchPromise
-    if(url instanceof Array){
-        let ajaxArr =[]
-        for(let i=0; i< url.length;i++){
-            let res = request(url[i],config)
+window.fetch = function (option) {
+    let fetchPromise //定义的请求
+    let config = {} //传给后端的参数
+    if (option.url instanceof Array) {
+        let ajaxArr = []
+        for (let i = 0; i < option.url.length; i++) {
+            Object.assign(config, __defaultOptions)
+            config.body = JSON.stringify(option.body[i])
+            let res = request(option.url[i], config)
             ajaxArr.push(res)
         }
         fetchPromise = Promise.all(ajaxArr)
-    }else{
-        fetchPromise = request(url, config);
+    } else {
+        Object.assign(config, __defaultOptions)
+        config.body = JSON.stringify(option.body)
+        fetchPromise = request(option.url, config);
     }
     if (!config.timeout) {
         config.timeout = 1000 * 4 //设置默认超时时间
@@ -111,13 +110,13 @@ window.fetch = function (url, body, config = {}) {
 }
 
 class Ajax {
-    post(url, body, config) {
+    post(option) {
         __defaultOptions.method = "POST"
-        return fetch(url, body, config)
+        return fetch(option)
     }
-    get(url, body, config) {
+    get(option) {
         __defaultOptions.method = "GET"
-        return fetch(url, body, config)
+        return fetch(option)
     }
 }
 export default new Ajax()

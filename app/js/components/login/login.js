@@ -1,7 +1,10 @@
 import $ from '../../core/yquery.js';
 import EventUtil from '../../core/eventUtil.js';
 class Login {
-    openLogin(){
+    constructor(){
+       
+    }
+    tpl(){
         let tpl = `<div id="login-box" class="auth-modal-box hide">
             <div class="auth-form">
                 <div class="panfish" >
@@ -20,7 +23,7 @@ class Login {
                             <input name="loginPassword" type="password" maxlength="64" placeholder="请输入密码" class="input">
                         </div>
                     </div>
-                    <button class="btn">登录</button>
+                    <button class="btn" id="login">登录</button>
                     <div class="prompt-box">没有账号？ <span class="clickable register">注册</span></div>
                 </div>
                 <div class="panel hide register-form">
@@ -36,53 +39,72 @@ class Login {
                             <input name="RePassword" type="password" maxlength="64" placeholder="请再次输入密码" class="input">
                         </div>
                     </div>
-                    <button class="btn">注册</button>
+                    <button class="btn" id="register">注册</button>
                     <div class="prompt-box text-center"><span class="clickable entry">已有账号登录</span></div>
                 </div>
             </div>
         </div>`;
-        $('body').append(tpl);
-        $('input[name="loginAccount"]').get(0).focus();
+        $('body').append(tpl)
     }
-   
-    hideLogin(){
-        document.body.removeChild($('#login-box').get(0));
+    openLogin(){
+        if($('#login-box').elements.length == 0){
+            this.tpl()
+        }
+        $('#login-box').removeClass('hide')
+        $('input[name="loginAccount"]').get(0).focus()
+        
+        this.initLoginEvent()
+        this.activeEle()
+    }
+    closeLogin(){
+        this.removeLoginEvent()
+        $('#login-box').addClass('hide')
+        
     }
     initLoginEvent() {
         let _this = this;
-        EventUtil.addHandler($('body').get(0), 'click', _this.useEvent.bind(_this));
+        EventUtil.addHandler($('.close-btn').get(0), 'click', _this.closeLogin.bind(_this));
+        EventUtil.addHandler($('.register').get(0), 'click', _this.register.bind(_this));
+        EventUtil.addHandler($('.entry').get(0), 'click', _this.entry.bind(_this));
         EventUtil.addHandler($('body').get(0), 'keyup', _this.activeEle.bind(_this));
+        EventUtil.addHandler($('body').get(0), 'mouseup', _this.activeEle);
     }
-    
+    removeLoginEvent(){
+        let _this = this;
+        EventUtil.removeHandler($('.close-btn').get(0), 'click', _this.closeLogin);
+        EventUtil.removeHandler($('.register').get(0), 'click', _this.register.bind(_this));
+        EventUtil.removeHandler($('.entry').get(0), 'click', _this.entry.bind(_this));
+        EventUtil.removeHandler($('body').get(0), 'keyup', _this.activeEle);
+        EventUtil.removeHandler($('body').get(0), 'mouseup', _this.activeEle);
+    }
     register(){
         $('.login-form').addClass('hide');
         $('.register-form').removeClass('hide');
         $('.panfish').addClass('hide');
         $('input[name="Account"]').get(0).focus();
-        
+        this.activeEle()
     }
     entry() {
         $('.login-form').removeClass('hide');
         $('.register-form').addClass('hide');
         $('.panfish').removeClass('hide');
         $('input[name="loginAccount"]').get(0).focus();
+        this.activeEle()
     }
-    useEvent(event) {
-        let events = EventUtil.getEvent(event);
-        let target = EventUtil.getTarget(events);
-        if (target.className.indexOf('close-btn') > -1) {
-            this.hideLogin();
-            // this.unLockBodyScroll();
-        } else if (target.className.indexOf('login-btn') > -1) {
-            this.openLogin();
-            // this.lockBodyScroll();
-        } else if (target.className.indexOf('register') > -1) {
-            this.register();
-        } else if (target.className.indexOf('entry') > -1) {
-            this.entry();
-        }
-        this.activeEle();
-    }
+    // useEvent(event) {
+    //     let events = EventUtil.getEvent(event);
+    //     let target = EventUtil.getTarget(events);
+    //     if (target.className.indexOf('close-btn') > -1) {
+    //         this.closeLogin();
+    //     } else if (target.className.indexOf('login-btn') > -1) {
+    //         this.openLogin();
+    //     } else if (target.className.indexOf('register') > -1) {
+    //         this.register();
+    //     } else if (target.className.indexOf('entry') > -1) {
+    //         this.entry();
+    //     }
+    //     this.activeEle();
+    // }
 
     activeEle() {
         let events = EventUtil.getEvent(event);

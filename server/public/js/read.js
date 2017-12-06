@@ -299,23 +299,48 @@
 	    }
 
 	    _createClass(Login, [{
-	        key: 'openLogin',
-	        value: function openLogin() {
-	            var tpl = '<div id="login-box" class="auth-modal-box hide">\n            <div class="auth-form">\n                <div class="panfish" >\n                    <img src="//gold-cdn.xitu.io/v3/static/img/normal.0447fe9.png" class="normal" style="">\n                    <img src="//gold-cdn.xitu.io/v3/static/img/greeting.1415c1c.png" class="greeting" style="display: none;">\n                    <img src="//gold-cdn.xitu.io/v3/static/img/blindfold.58ce423.png" class="blindfold" style="display: none;">\n                </div>\n                <i title="\u5173\u95ED" class="close-btn iconfont icon-close"></i>\n                <div class="panel login-form">\n                    <h1 class="title">\u767B\u5F55</h1>\n                    <div class="input-group">\n                        <div class="input-box">\n                            <input name="loginAccount" maxlength="64" placeholder="\u8BF7\u586B\u5199\u6635\u79F0/\u8D26\u53F7" class="input">\n                        </div>\n                        <div class="input-box">\n                            <input name="loginPassword" type="password" maxlength="64" placeholder="\u8BF7\u8F93\u5165\u5BC6\u7801" class="input">\n                        </div>\n                    </div>\n                    <button class="btn">\u767B\u5F55</button>\n                    <div class="prompt-box">\u6CA1\u6709\u8D26\u53F7\uFF1F <span class="clickable register">\u6CE8\u518C</span></div>\n                </div>\n                <div class="panel hide register-form">\n                    <h1 class="title">\u6CE8\u518C</h1>\n                    <div class="input-group">\n                        <div class="input-box">\n                            <input name="Account" maxlength="64" placeholder="\u8BF7\u586B\u5199\u6635\u79F0/\u8D26\u53F7" class="input">\n                        </div>\n                        <div class="input-box">\n                            <input name="Password" type="password" maxlength="64" placeholder="\u8BF7\u8F93\u5165\u5BC6\u7801" class="input">\n                        </div>\n                        <div class="input-box">\n                            <input name="RePassword" type="password" maxlength="64" placeholder="\u8BF7\u518D\u6B21\u8F93\u5165\u5BC6\u7801" class="input">\n                        </div>\n                    </div>\n                    <button class="btn">\u6CE8\u518C</button>\n                    <div class="prompt-box text-center"><span class="clickable entry">\u5DF2\u6709\u8D26\u53F7\u767B\u5F55</span></div>\n                </div>\n            </div>\n        </div>';
+	        key: 'tpl',
+	        value: function tpl() {
+	            var tpl = '<div id="login-box" class="auth-modal-box hide">\n            <div class="auth-form">\n                <div class="panfish" >\n                    <img src="//gold-cdn.xitu.io/v3/static/img/normal.0447fe9.png" class="normal" style="">\n                    <img src="//gold-cdn.xitu.io/v3/static/img/greeting.1415c1c.png" class="greeting" style="display: none;">\n                    <img src="//gold-cdn.xitu.io/v3/static/img/blindfold.58ce423.png" class="blindfold" style="display: none;">\n                </div>\n                <i title="\u5173\u95ED" class="close-btn iconfont icon-close"></i>\n                <div class="panel login-form">\n                    <h1 class="title">\u767B\u5F55</h1>\n                    <div class="input-group">\n                        <div class="input-box">\n                            <input name="loginAccount" maxlength="64" placeholder="\u8BF7\u586B\u5199\u6635\u79F0/\u8D26\u53F7" class="input">\n                        </div>\n                        <div class="input-box">\n                            <input name="loginPassword" type="password" maxlength="64" placeholder="\u8BF7\u8F93\u5165\u5BC6\u7801" class="input">\n                        </div>\n                    </div>\n                    <button class="btn" id="login">\u767B\u5F55</button>\n                    <div class="prompt-box">\u6CA1\u6709\u8D26\u53F7\uFF1F <span class="clickable register">\u6CE8\u518C</span></div>\n                </div>\n                <div class="panel hide register-form">\n                    <h1 class="title">\u6CE8\u518C</h1>\n                    <div class="input-group">\n                        <div class="input-box">\n                            <input name="Account" maxlength="64" placeholder="\u8BF7\u586B\u5199\u6635\u79F0/\u8D26\u53F7" class="input">\n                        </div>\n                        <div class="input-box">\n                            <input name="Password" type="password" maxlength="64" placeholder="\u8BF7\u8F93\u5165\u5BC6\u7801" class="input">\n                        </div>\n                        <div class="input-box">\n                            <input name="RePassword" type="password" maxlength="64" placeholder="\u8BF7\u518D\u6B21\u8F93\u5165\u5BC6\u7801" class="input">\n                        </div>\n                    </div>\n                    <button class="btn" id="register">\u6CE8\u518C</button>\n                    <div class="prompt-box text-center"><span class="clickable entry">\u5DF2\u6709\u8D26\u53F7\u767B\u5F55</span></div>\n                </div>\n            </div>\n        </div>';
 	            (0, _yquery2.default)('body').append(tpl);
-	            (0, _yquery2.default)('input[name="loginAccount"]').get(0).focus();
 	        }
 	    }, {
-	        key: 'hideLogin',
-	        value: function hideLogin() {
-	            document.body.removeChild((0, _yquery2.default)('#login-box').get(0));
+	        key: 'openLogin',
+	        value: function openLogin() {
+	            if ((0, _yquery2.default)('#login-box').elements.length == 0) {
+	                this.tpl();
+	            }
+	            (0, _yquery2.default)('#login-box').removeClass('hide');
+	            (0, _yquery2.default)('input[name="loginAccount"]').get(0).focus();
+
+	            this.initLoginEvent();
+	            this.activeEle();
+	        }
+	    }, {
+	        key: 'closeLogin',
+	        value: function closeLogin() {
+	            this.removeLoginEvent();
+	            (0, _yquery2.default)('#login-box').addClass('hide');
 	        }
 	    }, {
 	        key: 'initLoginEvent',
 	        value: function initLoginEvent() {
 	            var _this = this;
-	            _eventUtil2.default.addHandler((0, _yquery2.default)('body').get(0), 'click', _this.useEvent.bind(_this));
+	            _eventUtil2.default.addHandler((0, _yquery2.default)('.close-btn').get(0), 'click', _this.closeLogin.bind(_this));
+	            _eventUtil2.default.addHandler((0, _yquery2.default)('.register').get(0), 'click', _this.register.bind(_this));
+	            _eventUtil2.default.addHandler((0, _yquery2.default)('.entry').get(0), 'click', _this.entry.bind(_this));
 	            _eventUtil2.default.addHandler((0, _yquery2.default)('body').get(0), 'keyup', _this.activeEle.bind(_this));
+	            _eventUtil2.default.addHandler((0, _yquery2.default)('body').get(0), 'mouseup', _this.activeEle);
+	        }
+	    }, {
+	        key: 'removeLoginEvent',
+	        value: function removeLoginEvent() {
+	            var _this = this;
+	            _eventUtil2.default.removeHandler((0, _yquery2.default)('.close-btn').get(0), 'click', _this.closeLogin);
+	            _eventUtil2.default.removeHandler((0, _yquery2.default)('.register').get(0), 'click', _this.register.bind(_this));
+	            _eventUtil2.default.removeHandler((0, _yquery2.default)('.entry').get(0), 'click', _this.entry.bind(_this));
+	            _eventUtil2.default.removeHandler((0, _yquery2.default)('body').get(0), 'keyup', _this.activeEle);
+	            _eventUtil2.default.removeHandler((0, _yquery2.default)('body').get(0), 'mouseup', _this.activeEle);
 	        }
 	    }, {
 	        key: 'register',
@@ -324,6 +349,7 @@
 	            (0, _yquery2.default)('.register-form').removeClass('hide');
 	            (0, _yquery2.default)('.panfish').addClass('hide');
 	            (0, _yquery2.default)('input[name="Account"]').get(0).focus();
+	            this.activeEle();
 	        }
 	    }, {
 	        key: 'entry',
@@ -332,25 +358,23 @@
 	            (0, _yquery2.default)('.register-form').addClass('hide');
 	            (0, _yquery2.default)('.panfish').removeClass('hide');
 	            (0, _yquery2.default)('input[name="loginAccount"]').get(0).focus();
-	        }
-	    }, {
-	        key: 'useEvent',
-	        value: function useEvent(event) {
-	            var events = _eventUtil2.default.getEvent(event);
-	            var target = _eventUtil2.default.getTarget(events);
-	            if (target.className.indexOf('close-btn') > -1) {
-	                this.hideLogin();
-	                // this.unLockBodyScroll();
-	            } else if (target.className.indexOf('login-btn') > -1) {
-	                this.openLogin();
-	                // this.lockBodyScroll();
-	            } else if (target.className.indexOf('register') > -1) {
-	                this.register();
-	            } else if (target.className.indexOf('entry') > -1) {
-	                this.entry();
-	            }
 	            this.activeEle();
 	        }
+	        // useEvent(event) {
+	        //     let events = EventUtil.getEvent(event);
+	        //     let target = EventUtil.getTarget(events);
+	        //     if (target.className.indexOf('close-btn') > -1) {
+	        //         this.closeLogin();
+	        //     } else if (target.className.indexOf('login-btn') > -1) {
+	        //         this.openLogin();
+	        //     } else if (target.className.indexOf('register') > -1) {
+	        //         this.register();
+	        //     } else if (target.className.indexOf('entry') > -1) {
+	        //         this.entry();
+	        //     }
+	        //     this.activeEle();
+	        // }
+
 	    }, {
 	        key: 'activeEle',
 	        value: function activeEle() {
@@ -792,13 +816,13 @@
 	    }
 
 	    _createClass(Interface, [{
-	        key: 'login',
-	        value: function login(body) {
-	            return _ajax2.default.post(['/users/login', '/users/login1', '/users/login2'], body);
+	        key: 'loginAjax',
+	        value: function loginAjax(body) {
+	            return _ajax2.default.post({ url: ['/users/login', '/users/login1', '/users/login2'], "body": body });
 	        }
 	    }, {
-	        key: 'register',
-	        value: function register() {
+	        key: 'registerAjax',
+	        value: function registerAjax(body) {
 	            return _ajax2.default.post('/users/register');
 	        }
 	    }]);
@@ -904,25 +928,22 @@
 	 * body 请求参数
 	 * config 配置数据
 	 */
-	window.fetch = function (url, body) {
-	    var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-<<<<<<< HEAD
-=======
-	    //后续需要处理body是数组的情况
->>>>>>> cb158cbd1f6a5fe41c2ed4cf940a2fe9687664d0
-	    __defaultOptions.body = JSON.stringify(body);
-	    Object.assign(config, __defaultOptions);
-	    var fetchPromise = void 0;
-	    if (url instanceof Array) {
+	window.fetch = function (option) {
+	    var fetchPromise = void 0; //定义的请求
+	    var config = {}; //传给后端的参数
+	    if (option.url instanceof Array) {
 	        var ajaxArr = [];
-	        for (var i = 0; i < url.length; i++) {
-	            var res = request(url[i], config);
+	        for (var i = 0; i < option.url.length; i++) {
+	            Object.assign(config, __defaultOptions);
+	            config.body = JSON.stringify(option.body[i]);
+	            var res = request(option.url[i], config);
 	            ajaxArr.push(res);
 	        }
 	        fetchPromise = Promise.all(ajaxArr);
 	    } else {
-	        fetchPromise = request(url, config);
+	        Object.assign(config, __defaultOptions);
+	        config.body = JSON.stringify(option.body);
+	        fetchPromise = request(option.url, config);
 	    }
 	    if (!config.timeout) {
 	        config.timeout = 1000 * 4; //设置默认超时时间
@@ -943,15 +964,15 @@
 
 	    _createClass(Ajax, [{
 	        key: 'post',
-	        value: function post(url, body, config) {
+	        value: function post(option) {
 	            __defaultOptions.method = "POST";
-	            return fetch(url, body, config);
+	            return fetch(option);
 	        }
 	    }, {
 	        key: 'get',
-	        value: function get(url, body, config) {
+	        value: function get(option) {
 	            __defaultOptions.method = "GET";
-	            return fetch(url, body, config);
+	            return fetch(option);
 	        }
 	    }]);
 
@@ -1540,21 +1561,28 @@
 	    function Read() {
 	        _classCallCheck(this, Read);
 
-	        var _this = _possibleConstructorReturn(this, (Read.__proto__ || Object.getPrototypeOf(Read)).call(this));
+	        var _this2 = _possibleConstructorReturn(this, (Read.__proto__ || Object.getPrototypeOf(Read)).call(this));
 
-	        _this.initStatus();
-	        _this.initLoginEvent();
-	        return _this;
+	        _this2.initStatus();
+	        // this.initLoginEvent()
+	        _this2.initEVent();
+	        return _this2;
 	    }
 
 	    _createClass(Read, [{
 	        key: 'initStatus',
 	        value: function initStatus() {
-	            this.login({ username: "yu580", password: "123", repassword: "123" }).then(function (res) {
+	            this.loginAjax([{ username: "yu580", password: "123", repassword: "123" }, { password: "123", repassword: "123" }, { username: "0" }]).then(function (res) {
 	                log(res);
 	            }).catch(function (res) {
 	                log('123');
 	            });
+	        }
+	    }, {
+	        key: 'initEVent',
+	        value: function initEVent() {
+	            var _this = this;
+	            _eventUtil2.default.addHandler((0, _yquery2.default)('#comment-sub').get(0), 'click', _this.openLogin.bind(_this));
 	        }
 	    }]);
 
@@ -1565,6 +1593,7 @@
 
 
 	var read = new Read();
+	window.read = read;
 
 /***/ })
 

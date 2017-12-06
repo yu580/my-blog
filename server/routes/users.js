@@ -15,20 +15,15 @@ router.use(function (req, res, next) {
  */
 router.post('/login', function (req, res, next) {
     console.log(req.body.username)
-    // console.log(res)
     res.json(responseData)
 });
 router.post('/login1', function (req, res, next) {
     console.log(req.body.username)
-    // console.log(res)
     res.json(responseData)
 });
 router.post('/login2', function (req, res, next) {
     console.log(req.body.username)
-    // console.log(res)
-    setTimeout(function(){
-        res.json(responseData)
-    },6000)  
+    res.json(responseData)
 });
 
 module.exports = router;

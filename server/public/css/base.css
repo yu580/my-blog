@@ -135,10 +135,10 @@ table {
   float: right;
 }
 .hide {
-  display: none;
+  display: none !important;
 }
 .show {
-  display: block;
+  display: block !important;
 }
 button {
   -webkit-appearance: none;
