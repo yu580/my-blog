@@ -2,11 +2,11 @@ import ajax from '../../core/ajax.js'
 
 class Interface {
     loginAjax(body) {
-        return ajax.post({url:['/users/login','/users/login1','/users/login2'],"body":body})
+        return ajax.post({url:'/users/login',"body":body})
     }
 
     registerAjax(body) {
-        return ajax.post('/users/register')
+        return ajax.post({url:'/users/register',"body":body})
     }
 
 }

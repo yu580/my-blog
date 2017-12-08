@@ -29,7 +29,17 @@ class Yquery {
 
         return this;
     }
+    value(sHtml){
+        if (isUndefined(sHtml)) {
+            return this.get(0).value;
+        }
 
+        this.optimizeCb((ele) => {
+            ele.value = sHtml;
+        });
+
+        return this;
+    }
     addClass(iClass) {
         this.optimizeCb((ele) => {
             if (ele.className.split(' ').indexOf(iClass) === -1) {

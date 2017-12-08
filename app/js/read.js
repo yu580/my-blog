@@ -24,12 +24,12 @@ var log = console.log.bind(console)
 class Read extends mix(Login, Base, Interface) {
     constructor() {
         super();
-        this.initStatus();
-        // this.initLoginEvent()
-        this.initEVent()
+        // this.initStatus();
+        this.initLoginEvent()
+        // this.initEVent()
     }
     initStatus(){
-        this.loginAjax([{username:"yu580",password:"123",repassword:"123"},{password:"123",repassword:"123"},{username:"0"}])
+        this.loginAjax({username:"yu580",password:"123",repassword:"123"})
             .then(function(res){
                 log(res)
             })
@@ -39,7 +39,7 @@ class Read extends mix(Login, Base, Interface) {
     }
     initEVent(){
         let _this = this
-        EventUtil.addHandler($('#comment-sub').get(0), 'click', _this.openLogin.bind(_this));
+        
     }
 }
 
@@ -47,5 +47,6 @@ export default Read
 
 let read = new Read()
 window.read = read
+window.$ = $
 
 

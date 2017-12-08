@@ -34,7 +34,9 @@ var promise = mongoose.connect("mongodb://localhost:27017/blog", {
 
 promise.then(function(db) {
   logger('连接数据库成功');
-});
+}).catch(function(res){
+  logger('连接数据库失败');
+})
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -55,7 +57,7 @@ app.use('/users', users);
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
-  next(err);
+  return next(err);
 });
 
 // error handlers
@@ -69,6 +71,7 @@ if (app.get('env') === 'development') {
       message: err.message,
       error: err
     });
+    return
   });
 }
 
@@ -80,6 +83,7 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+  return
 });
 
 

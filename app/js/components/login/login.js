@@ -1,4 +1,5 @@
 import $ from '../../core/yquery.js';
+import ajax from '../../core/ajax.js';
 import EventUtil from '../../core/eventUtil.js';
 class Login {
     constructor(){
@@ -52,30 +53,22 @@ class Login {
         }
         $('#login-box').removeClass('hide')
         $('input[name="loginAccount"]').get(0).focus()
-        
-        this.initLoginEvent()
         this.activeEle()
     }
     closeLogin(){
-        this.removeLoginEvent()
         $('#login-box').addClass('hide')
-        
     }
     initLoginEvent() {
         let _this = this;
-        EventUtil.addHandler($('.close-btn').get(0), 'click', _this.closeLogin.bind(_this));
-        EventUtil.addHandler($('.register').get(0), 'click', _this.register.bind(_this));
-        EventUtil.addHandler($('.entry').get(0), 'click', _this.entry.bind(_this));
-        EventUtil.addHandler($('body').get(0), 'keyup', _this.activeEle.bind(_this));
-        EventUtil.addHandler($('body').get(0), 'mouseup', _this.activeEle);
+        EventUtil.addHandler($('body').get(0), 'click', _this.useEvent.bind(_this));
+        EventUtil.addHandler($('body').get(0), 'keyup', _this.activeEle);
     }
-    removeLoginEvent(){
-        let _this = this;
-        EventUtil.removeHandler($('.close-btn').get(0), 'click', _this.closeLogin);
-        EventUtil.removeHandler($('.register').get(0), 'click', _this.register.bind(_this));
-        EventUtil.removeHandler($('.entry').get(0), 'click', _this.entry.bind(_this));
-        EventUtil.removeHandler($('body').get(0), 'keyup', _this.activeEle);
-        EventUtil.removeHandler($('body').get(0), 'mouseup', _this.activeEle);
+    clickResgister(){
+        let formData = {}
+        formData.username = $('input[name="Account"]').value()
+        formData.password = $('input[name="Password"]').value()
+        formData.repassword = $('input[name="RePassword"]').value()
+        this.registerAjax(formData)
     }
     register(){
         $('.login-form').addClass('hide');
@@ -91,20 +84,22 @@ class Login {
         $('input[name="loginAccount"]').get(0).focus();
         this.activeEle()
     }
-    // useEvent(event) {
-    //     let events = EventUtil.getEvent(event);
-    //     let target = EventUtil.getTarget(events);
-    //     if (target.className.indexOf('close-btn') > -1) {
-    //         this.closeLogin();
-    //     } else if (target.className.indexOf('login-btn') > -1) {
-    //         this.openLogin();
-    //     } else if (target.className.indexOf('register') > -1) {
-    //         this.register();
-    //     } else if (target.className.indexOf('entry') > -1) {
-    //         this.entry();
-    //     }
-    //     this.activeEle();
-    // }
+    useEvent(event) {
+        let events = EventUtil.getEvent(event);
+        let target = EventUtil.getTarget(events);
+        if (target.className.indexOf('close-btn') > -1) {
+            this.closeLogin();
+        } else if (target.className.indexOf('login-btn') > -1) {
+            this.openLogin();
+        } else if (target.className.indexOf('register') > -1) {
+            this.register();
+        } else if (target.className.indexOf('entry') > -1) {
+            this.entry();
+        }else if(target.id === 'register'){
+            this.clickResgister()
+        }
+        this.activeEle();
+    }
 
     activeEle() {
         let events = EventUtil.getEvent(event);

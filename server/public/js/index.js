@@ -9609,7 +9609,7 @@
 
 	var _login2 = _interopRequireDefault(_login);
 
-	var _interface = __webpack_require__(336);
+	var _interface = __webpack_require__(338);
 
 	var _interface2 = _interopRequireDefault(_interface);
 
@@ -9617,7 +9617,7 @@
 
 	var _yquery2 = _interopRequireDefault(_yquery);
 
-	var _eventUtil = __webpack_require__(334);
+	var _eventUtil = __webpack_require__(336);
 
 	var _eventUtil2 = _interopRequireDefault(_eventUtil);
 
@@ -9864,6 +9864,19 @@
 	            return this;
 	        }
 	    }, {
+	        key: 'value',
+	        value: function value(sHtml) {
+	            if (isUndefined(sHtml)) {
+	                return this.get(0).value;
+	            }
+
+	            this.optimizeCb(function (ele) {
+	                ele.value = sHtml;
+	            });
+
+	            return this;
+	        }
+	    }, {
 	        key: 'addClass',
 	        value: function addClass(iClass) {
 	            this.optimizeCb(function (ele) {
@@ -10005,7 +10018,11 @@
 
 	var _yquery2 = _interopRequireDefault(_yquery);
 
-	var _eventUtil = __webpack_require__(334);
+	var _ajax = __webpack_require__(334);
+
+	var _ajax2 = _interopRequireDefault(_ajax);
+
+	var _eventUtil = __webpack_require__(336);
 
 	var _eventUtil2 = _interopRequireDefault(_eventUtil);
 
@@ -10032,35 +10049,28 @@
 	            }
 	            (0, _yquery2.default)('#login-box').removeClass('hide');
 	            (0, _yquery2.default)('input[name="loginAccount"]').get(0).focus();
-
-	            this.initLoginEvent();
 	            this.activeEle();
 	        }
 	    }, {
 	        key: 'closeLogin',
 	        value: function closeLogin() {
-	            this.removeLoginEvent();
 	            (0, _yquery2.default)('#login-box').addClass('hide');
 	        }
 	    }, {
 	        key: 'initLoginEvent',
 	        value: function initLoginEvent() {
 	            var _this = this;
-	            _eventUtil2.default.addHandler((0, _yquery2.default)('.close-btn').get(0), 'click', _this.closeLogin.bind(_this));
-	            _eventUtil2.default.addHandler((0, _yquery2.default)('.register').get(0), 'click', _this.register.bind(_this));
-	            _eventUtil2.default.addHandler((0, _yquery2.default)('.entry').get(0), 'click', _this.entry.bind(_this));
-	            _eventUtil2.default.addHandler((0, _yquery2.default)('body').get(0), 'keyup', _this.activeEle.bind(_this));
-	            _eventUtil2.default.addHandler((0, _yquery2.default)('body').get(0), 'mouseup', _this.activeEle);
+	            _eventUtil2.default.addHandler((0, _yquery2.default)('body').get(0), 'click', _this.useEvent.bind(_this));
+	            _eventUtil2.default.addHandler((0, _yquery2.default)('body').get(0), 'keyup', _this.activeEle);
 	        }
 	    }, {
-	        key: 'removeLoginEvent',
-	        value: function removeLoginEvent() {
-	            var _this = this;
-	            _eventUtil2.default.removeHandler((0, _yquery2.default)('.close-btn').get(0), 'click', _this.closeLogin);
-	            _eventUtil2.default.removeHandler((0, _yquery2.default)('.register').get(0), 'click', _this.register.bind(_this));
-	            _eventUtil2.default.removeHandler((0, _yquery2.default)('.entry').get(0), 'click', _this.entry.bind(_this));
-	            _eventUtil2.default.removeHandler((0, _yquery2.default)('body').get(0), 'keyup', _this.activeEle);
-	            _eventUtil2.default.removeHandler((0, _yquery2.default)('body').get(0), 'mouseup', _this.activeEle);
+	        key: 'clickResgister',
+	        value: function clickResgister() {
+	            var formData = {};
+	            formData.username = (0, _yquery2.default)('input[name="Account"]').value();
+	            formData.password = (0, _yquery2.default)('input[name="Password"]').value();
+	            formData.repassword = (0, _yquery2.default)('input[name="RePassword"]').value();
+	            this.registerAjax(formData);
 	        }
 	    }, {
 	        key: 'register',
@@ -10080,21 +10090,24 @@
 	            (0, _yquery2.default)('input[name="loginAccount"]').get(0).focus();
 	            this.activeEle();
 	        }
-	        // useEvent(event) {
-	        //     let events = EventUtil.getEvent(event);
-	        //     let target = EventUtil.getTarget(events);
-	        //     if (target.className.indexOf('close-btn') > -1) {
-	        //         this.closeLogin();
-	        //     } else if (target.className.indexOf('login-btn') > -1) {
-	        //         this.openLogin();
-	        //     } else if (target.className.indexOf('register') > -1) {
-	        //         this.register();
-	        //     } else if (target.className.indexOf('entry') > -1) {
-	        //         this.entry();
-	        //     }
-	        //     this.activeEle();
-	        // }
-
+	    }, {
+	        key: 'useEvent',
+	        value: function useEvent(event) {
+	            var events = _eventUtil2.default.getEvent(event);
+	            var target = _eventUtil2.default.getTarget(events);
+	            if (target.className.indexOf('close-btn') > -1) {
+	                this.closeLogin();
+	            } else if (target.className.indexOf('login-btn') > -1) {
+	                this.openLogin();
+	            } else if (target.className.indexOf('register') > -1) {
+	                this.register();
+	            } else if (target.className.indexOf('entry') > -1) {
+	                this.entry();
+	            } else if (target.id === 'register') {
+	                this.clickResgister();
+	            }
+	            this.activeEle();
+	        }
 	    }, {
 	        key: 'activeEle',
 	        value: function activeEle() {
@@ -10135,433 +10148,9 @@
 	    value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //事件相关方法
-
-
-	var _client = __webpack_require__(335);
-
-	var _client2 = _interopRequireDefault(_client);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var client = (0, _client2.default)();
-
-	var EventUntil = function () {
-	    function EventUntil() {
-	        _classCallCheck(this, EventUntil);
-	    }
-
-	    _createClass(EventUntil, [{
-	        key: 'addHandler',
-
-	        /**
-	         * 兼容IE和其他浏览器的事件添加方法，
-	         * @param {[object]} element [元素对象]
-	         * @param {[string]} type    [事件类型 click等]
-	         * @param {[function]} handler [操作函数]
-	         */
-	        value: function addHandler(element, type, handler) {
-	            // 标准方法
-	            if (element.addEventListener) {
-	                // false表示冒泡
-	                element.addEventListener(type, handler, false);
-	            } else if (element.attachEvent) {
-	                element.attachEvent('on' + type, handler);
-	            } else {
-	                // Dom0级事件
-	                element['on' + type] = handler;
-	            }
-	        }
-	    }, {
-	        key: 'removeHandler',
-	        value: function removeHandler(element, type, handler) {
-	            if (element.removeEventListener) {
-	                element.removeEventListener(type, handler);
-	            } else if (element.detachEvent) {
-	                element.detachEvent('on' + type, handler);
-	            } else {
-	                // Dom0级移除事件
-	                element['on' + type] == null;
-	            }
-	        }
-	        // 获取事件IE和w3c的不同
-
-	    }, {
-	        key: 'getEvent',
-	        value: function getEvent(event) {
-	            return event ? event : window.event;
-	        }
-	        // 事件的目标,就是指点在哪里
-
-	    }, {
-	        key: 'getTarget',
-	        value: function getTarget(event) {
-	            return event.target || event.srcElement;
-	        }
-	    }, {
-	        key: 'preventDefault',
-	        value: function preventDefault(event) {
-	            if (event.preventDefault) {
-	                // 阻止默认行为
-	                event.preventDefault();
-	            } else {
-	                // IE阻止默认行为
-	                event.returnValue = false;
-	            }
-	        }
-	    }, {
-	        key: 'stopPropagation',
-	        value: function stopPropagation(event) {
-	            if (event.stopPropagation) {
-	                event.stopPropagation();
-	            } else {
-	                // IE取消冒泡
-	                event.cancelBubble = true;
-	            }
-	        }
-	        // 已经兼容了IE8和以下浏览器
-
-	    }, {
-	        key: 'getPageX',
-	        value: function getPageX(event) {
-	            var pagex = 0;
-
-	            if (event.pageX === undefined) {
-	                pagex = event.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
-	            } else {
-	                pagex = event.pageX;
-	            }
-	            return pagex;
-	        }
-	    }, {
-	        key: 'getPageY',
-	        value: function getPageY(event) {
-	            var pagey = 0;
-	            if (event.pageY === undefined) {
-	                pagey = event.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
-	            } else {
-	                pagey = event.pageY;
-	            }
-	            return pagey;
-	        }
-	    }, {
-	        key: 'getRelatedTarget',
-	        value: function getRelatedTarget(event) {
-	            if (event.relatedTarget) {
-	                return event.relatedTarget;
-	            } else if (event.toElement) {
-	                return event.toElement;
-	            } else if (event.fromElement) {
-	                return event.fromElement;
-	            } else {
-	                return null;
-	            }
-	        }
-	    }, {
-	        key: 'getWheelDelta',
-	        value: function getWheelDelta(event) {
-	            // 向上滚蛋为+120，向下滚动为-120
-	            if (event.wheelDelta) {
-	                // IE和其他浏览器支持mousewheel事件
-	                return client.engine.opera && client.engine.opera < 9.5 ? -event.wheelDelta : event.wheelDelta;
-	            } else {
-	                // 火狐支持一个DOMMouseScroll事件
-	                return -event.detail * 40;
-	            }
-	        }
-	    }, {
-	        key: 'getCharCode',
-	        value: function getCharCode(event) {
-	            if (typeof event.charCode == 'number') {
-	                return event.charCode;
-	            } else {
-	                return event.keyCode;
-	            }
-	        }
-	    }]);
-
-	    return EventUntil;
-	}();
-
-	exports.default = new EventUntil();
-
-	// //实例
-
-	// document.onclick = function (event) {
-	//     let e = eventUntil.getEvent(event);
-	//     alert(eventUntil.getPageX(event) + ' ' + eventUntil.getPageY(event));
-	// }
-	// let mouse = document.getElementById('mouseover');
-	// eventUntil.addHandler(mouse, 'mouseover', function (event) {
-	//     let event = eventUntil.getEvent(event);
-	//     let related = eventUntil.getRelatedTarget(event);
-	//     alert(related);
-	// });
-
-	// eventUntil.addHandler(mouse, 'mouseout', function (event) {
-	//     let event = eventUntil.getEvent(event);
-	//     let related = eventUntil.getRelatedTarget(event);
-	//     alert(related);
-	// });
-
-	// eventUntil.addHandler(document, 'click', function (event) {
-	//     let event = eventUntil.getEvent(event);
-	//     let btnValue = eventUntil.getButton(event);
-	//     eventUntil.preventDefault(event);
-	//     switch (btnValue) {
-	//         case 0:
-	//             alert('左键');
-	//             break;
-	//         case 1:
-	//             alert('中键');
-	//             break;
-	//         case 2:
-	//             alert('右键');
-	//             break;
-	//     }
-	// });
-	// 谷歌等其他滚动事件
-	// eventUntil.addHandler(document, 'mousewheel', function (event) {
-	//     let event = eventUntil.getEvent(event);
-	//     alert(event.wheelDelta);
-	// });
-	// 火狐浏览器滚动事件
-	// eventUntil.addHandler(window, 'DOMMouseScroll', function (event) {
-	//     let event = eventUntil.getEvent(event);
-	//     let detail = eventUntil.getWheelDelta(event);
-	//     alert(detail);
-	// });
-
-	// eventUntil.addHandler(document.getElementById('keypress'), 'keypress', function (event) {
-	//     let event = eventUntil.getEvent(event);
-	//     let charcode = eventUntil.getCharCode(event);
-	//     alert(charcode);
-	// });
-
-	// eventUntil.addHandler(window, 'scroll', function (event) {
-	//     // 表示标准模式
-	//     if (document.compatMode == 'CSS1Compat') {
-	//         document.documentElement.scrollTop = '200';
-	//     } else {
-	//         alert(document.body.scrollLeft);
-	//     }
-	// });
-
-/***/ }),
-/* 335 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	//客户端相关检测 浏览器、系统、渲染引擎
-	var Client = function Client() {
-	    var engine = { //渲染引擎
-	        ie: 0,
-	        gecko: 0,
-	        webkit: 0,
-	        khtml: 0,
-	        opera: 0,
-	        ver: null
-	    };
-	    var browser = { //浏览器
-	        ie: 0,
-	        firefox: 0,
-	        safari: 0,
-	        konq: 0,
-	        opera: 0,
-	        chrome: 0,
-
-	        ver: null
-	    };
-	    var system = { //系统平台
-	        win: false,
-	        mac: false,
-	        x11: false,
-
-	        //移动设备
-	        iphone: false,
-	        ipod: false,
-	        ipad: false,
-	        android: false,
-	        nokiaN: false,
-	        winMobile: false,
-
-	        //游戏系统
-	        wii: false,
-	        ps: false
-	    };
-
-	    var ua = navigator.userAgent;
-	    if (window.opera) {
-	        engine.ver = browser.ver = window.opera.version();
-	        engine.opera = browser.opera = parseFloat(engine.ver);
-	    } else if (/AppleWebKit\/(\S+)/.test(ua)) {
-	        engine.ver = RegExp["$1"];
-	        engine.webkit = parseFloat(engine.ver);
-
-	        if (/Chrome\/(\S+)/.test(ua)) {
-	            browser.ver = RegExp["$1"];
-	            browser.chrome = parseFloat(browser.ver);
-	        } else if (/Version\/(\S+)/.test(ua)) {
-	            browser.ver = RegExp["$1"];
-	            browser.safari = parseFloat(browser.ver);
-	        } else {
-	            //近似地确定版本号
-	            var safariVersion = 1;
-	            if (engine.webkit < 100) {
-	                safariVersion = 1;
-	            } else if (engine.webkit < 312) {
-	                safariVersion = 1.2;
-	            } else if (engine.webkit < 412) {
-	                safariVersion = 1.3;
-	            } else {
-	                safariVersion = 2;
-	            }
-	            browser.safari = browser.ver = safariVersion;
-	        }
-	    } else if (/KHTML\/(\S+)/.test(ua) || /Konqueror\/([^;]+)/.test(ua)) {
-	        engine.ver = browser.ver = RegExp["$1"];
-	        engine.khtml = browser.konq = parseFloat(engine.ver);
-	    } else if (/rv:([^\)]+)\) Gecko\/\d{8}/.test(ua)) {
-	        engine.ver = RegExp["$1"];
-	        engine.gecko = parseFloat(engine.ver);
-
-	        if (/Firefox\/(\S+)/.test(ua)) {
-	            browser.ver = RegExp["$1"];
-	            browser.firefox = parseFloat(browser.ver);
-	        }
-	    } else if (/MSIE ([^;]+)/.test(ua)) {
-	        engine.ver = browser.ver = RegExp["$1"];
-	        engine.ie = browser.ie = parseFloat(engine.ver);
-	    }
-
-	    var p = navigator.platform;
-	    system.win = p.indexOf("Win") == 0;
-	    system.mac = p.indexOf("Mac") == 0;
-	    system.x11 = p == "X11" || p.indexOf("Linux") == 0;
-
-	    if (system.win) {
-	        if (/Win(?:dows )?([^do]{2})\s?(\d+\.\d+)?/.test(ua)) {
-	            if (RegExp["$1"] == "NT") {
-	                switch (RegExp["$2"]) {
-	                    case "5.0":
-	                        system.win = "2000";
-	                        break;
-	                    case "5.1":
-	                        system.win = "XP";
-	                        break;
-	                    case "6.0":
-	                        system.win = "Vista";
-	                        break;
-	                    case "6.1":
-	                        system.win = "7";
-	                        break;
-	                    default:
-	                        system.win = "NT";
-	                        break;
-	                }
-	            } else if (RegExp["$1"] == '9x') {
-	                system.win = "ME";
-	            } else {
-	                system.win = RegExp["$1"];
-	            }
-	        }
-	    }
-
-	    system.iphone = ua.indexOf("iPhone") > -1;
-	    system.ipod = ua.indexOf("iPod") > -1;
-	    system.ipad = ua.indexOf("iPad") > -1;
-	    system.nokiaN = ua.indexOf("NokiaN") > -1;
-	    if (system.win == "CE") {
-	        system.winMobile = system.win;
-	    } else if (system.win == "Ph") {
-	        if (/Windows Phone OS (\d+\.\d+)/.test(ua)) {
-	            system.win = "Phone";
-	            system.winMobile = parseFloat(RegExp["$1"]);
-	        }
-	    }
-	    if (system.mac && ua.indexOf("Mobile") > -1) {
-	        if (/CPU (?:iPhone )?OS (\d+_\d+)/.test(ua)) {
-	            system.ios = parseFloat(RegExp["$1"].replace("_", "."));
-	        } else {
-	            system.ios = 2; //近似
-	        }
-	    }
-	    if (/Android (\d+\.\d+)/.test(ua)) {
-	        system.android = parseFloat(RegExp["$1"]);
-	    }
-	    system.wii = ua.indexOf("Wii") > -1;
-	    system.ps = /playstation/i.test(ua);
-
-	    return {
-	        engine: engine,
-	        browser: browser,
-	        system: system
-	    };
-	};
-
-	exports.default = Client;
-
-/***/ }),
-/* 336 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _ajax = __webpack_require__(337);
-
-	var _ajax2 = _interopRequireDefault(_ajax);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Interface = function () {
-	    function Interface() {
-	        _classCallCheck(this, Interface);
-	    }
-
-	    _createClass(Interface, [{
-	        key: 'loginAjax',
-	        value: function loginAjax(body) {
-	            return _ajax2.default.post({ url: ['/users/login', '/users/login1', '/users/login2'], "body": body });
-	        }
-	    }, {
-	        key: 'registerAjax',
-	        value: function registerAjax(body) {
-	            return _ajax2.default.post('/users/register');
-	        }
-	    }]);
-
-	    return Interface;
-	}();
-
-	exports.default = Interface;
-
-/***/ }),
-/* 337 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	__webpack_require__(338);
+	__webpack_require__(335);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -10698,7 +10287,7 @@
 	exports.default = new Ajax();
 
 /***/ }),
-/* 338 */
+/* 335 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11160,6 +10749,430 @@
 	  };
 	  self.fetch.polyfill = true;
 	})(typeof self !== 'undefined' ? self : undefined);
+
+/***/ }),
+/* 336 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //事件相关方法
+
+
+	var _client = __webpack_require__(337);
+
+	var _client2 = _interopRequireDefault(_client);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var client = (0, _client2.default)();
+
+	var EventUntil = function () {
+	    function EventUntil() {
+	        _classCallCheck(this, EventUntil);
+	    }
+
+	    _createClass(EventUntil, [{
+	        key: 'addHandler',
+
+	        /**
+	         * 兼容IE和其他浏览器的事件添加方法，
+	         * @param {[object]} element [元素对象]
+	         * @param {[string]} type    [事件类型 click等]
+	         * @param {[function]} handler [操作函数]
+	         */
+	        value: function addHandler(element, type, handler) {
+	            // 标准方法
+	            if (element.addEventListener) {
+	                // false表示冒泡
+	                element.addEventListener(type, handler, false);
+	            } else if (element.attachEvent) {
+	                element.attachEvent('on' + type, handler);
+	            } else {
+	                // Dom0级事件
+	                element['on' + type] = handler;
+	            }
+	        }
+	    }, {
+	        key: 'removeHandler',
+	        value: function removeHandler(element, type, handler) {
+	            if (element.removeEventListener) {
+	                element.removeEventListener(type, handler);
+	            } else if (element.detachEvent) {
+	                element.detachEvent('on' + type, handler);
+	            } else {
+	                // Dom0级移除事件
+	                element['on' + type] == null;
+	            }
+	        }
+	        // 获取事件IE和w3c的不同
+
+	    }, {
+	        key: 'getEvent',
+	        value: function getEvent(event) {
+	            return event ? event : window.event;
+	        }
+	        // 事件的目标,就是指点在哪里
+
+	    }, {
+	        key: 'getTarget',
+	        value: function getTarget(event) {
+	            return event.target || event.srcElement;
+	        }
+	    }, {
+	        key: 'preventDefault',
+	        value: function preventDefault(event) {
+	            if (event.preventDefault) {
+	                // 阻止默认行为
+	                event.preventDefault();
+	            } else {
+	                // IE阻止默认行为
+	                event.returnValue = false;
+	            }
+	        }
+	    }, {
+	        key: 'stopPropagation',
+	        value: function stopPropagation(event) {
+	            if (event.stopPropagation) {
+	                event.stopPropagation();
+	            } else {
+	                // IE取消冒泡
+	                event.cancelBubble = true;
+	            }
+	        }
+	        // 已经兼容了IE8和以下浏览器
+
+	    }, {
+	        key: 'getPageX',
+	        value: function getPageX(event) {
+	            var pagex = 0;
+
+	            if (event.pageX === undefined) {
+	                pagex = event.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft);
+	            } else {
+	                pagex = event.pageX;
+	            }
+	            return pagex;
+	        }
+	    }, {
+	        key: 'getPageY',
+	        value: function getPageY(event) {
+	            var pagey = 0;
+	            if (event.pageY === undefined) {
+	                pagey = event.clientY + (document.documentElement.scrollTop || document.body.scrollTop);
+	            } else {
+	                pagey = event.pageY;
+	            }
+	            return pagey;
+	        }
+	    }, {
+	        key: 'getRelatedTarget',
+	        value: function getRelatedTarget(event) {
+	            if (event.relatedTarget) {
+	                return event.relatedTarget;
+	            } else if (event.toElement) {
+	                return event.toElement;
+	            } else if (event.fromElement) {
+	                return event.fromElement;
+	            } else {
+	                return null;
+	            }
+	        }
+	    }, {
+	        key: 'getWheelDelta',
+	        value: function getWheelDelta(event) {
+	            // 向上滚蛋为+120，向下滚动为-120
+	            if (event.wheelDelta) {
+	                // IE和其他浏览器支持mousewheel事件
+	                return client.engine.opera && client.engine.opera < 9.5 ? -event.wheelDelta : event.wheelDelta;
+	            } else {
+	                // 火狐支持一个DOMMouseScroll事件
+	                return -event.detail * 40;
+	            }
+	        }
+	    }, {
+	        key: 'getCharCode',
+	        value: function getCharCode(event) {
+	            if (typeof event.charCode == 'number') {
+	                return event.charCode;
+	            } else {
+	                return event.keyCode;
+	            }
+	        }
+	    }]);
+
+	    return EventUntil;
+	}();
+
+	exports.default = new EventUntil();
+
+	// //实例
+
+	// document.onclick = function (event) {
+	//     let e = eventUntil.getEvent(event);
+	//     alert(eventUntil.getPageX(event) + ' ' + eventUntil.getPageY(event));
+	// }
+	// let mouse = document.getElementById('mouseover');
+	// eventUntil.addHandler(mouse, 'mouseover', function (event) {
+	//     let event = eventUntil.getEvent(event);
+	//     let related = eventUntil.getRelatedTarget(event);
+	//     alert(related);
+	// });
+
+	// eventUntil.addHandler(mouse, 'mouseout', function (event) {
+	//     let event = eventUntil.getEvent(event);
+	//     let related = eventUntil.getRelatedTarget(event);
+	//     alert(related);
+	// });
+
+	// eventUntil.addHandler(document, 'click', function (event) {
+	//     let event = eventUntil.getEvent(event);
+	//     let btnValue = eventUntil.getButton(event);
+	//     eventUntil.preventDefault(event);
+	//     switch (btnValue) {
+	//         case 0:
+	//             alert('左键');
+	//             break;
+	//         case 1:
+	//             alert('中键');
+	//             break;
+	//         case 2:
+	//             alert('右键');
+	//             break;
+	//     }
+	// });
+	// 谷歌等其他滚动事件
+	// eventUntil.addHandler(document, 'mousewheel', function (event) {
+	//     let event = eventUntil.getEvent(event);
+	//     alert(event.wheelDelta);
+	// });
+	// 火狐浏览器滚动事件
+	// eventUntil.addHandler(window, 'DOMMouseScroll', function (event) {
+	//     let event = eventUntil.getEvent(event);
+	//     let detail = eventUntil.getWheelDelta(event);
+	//     alert(detail);
+	// });
+
+	// eventUntil.addHandler(document.getElementById('keypress'), 'keypress', function (event) {
+	//     let event = eventUntil.getEvent(event);
+	//     let charcode = eventUntil.getCharCode(event);
+	//     alert(charcode);
+	// });
+
+	// eventUntil.addHandler(window, 'scroll', function (event) {
+	//     // 表示标准模式
+	//     if (document.compatMode == 'CSS1Compat') {
+	//         document.documentElement.scrollTop = '200';
+	//     } else {
+	//         alert(document.body.scrollLeft);
+	//     }
+	// });
+
+/***/ }),
+/* 337 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	//客户端相关检测 浏览器、系统、渲染引擎
+	var Client = function Client() {
+	    var engine = { //渲染引擎
+	        ie: 0,
+	        gecko: 0,
+	        webkit: 0,
+	        khtml: 0,
+	        opera: 0,
+	        ver: null
+	    };
+	    var browser = { //浏览器
+	        ie: 0,
+	        firefox: 0,
+	        safari: 0,
+	        konq: 0,
+	        opera: 0,
+	        chrome: 0,
+
+	        ver: null
+	    };
+	    var system = { //系统平台
+	        win: false,
+	        mac: false,
+	        x11: false,
+
+	        //移动设备
+	        iphone: false,
+	        ipod: false,
+	        ipad: false,
+	        android: false,
+	        nokiaN: false,
+	        winMobile: false,
+
+	        //游戏系统
+	        wii: false,
+	        ps: false
+	    };
+
+	    var ua = navigator.userAgent;
+	    if (window.opera) {
+	        engine.ver = browser.ver = window.opera.version();
+	        engine.opera = browser.opera = parseFloat(engine.ver);
+	    } else if (/AppleWebKit\/(\S+)/.test(ua)) {
+	        engine.ver = RegExp["$1"];
+	        engine.webkit = parseFloat(engine.ver);
+
+	        if (/Chrome\/(\S+)/.test(ua)) {
+	            browser.ver = RegExp["$1"];
+	            browser.chrome = parseFloat(browser.ver);
+	        } else if (/Version\/(\S+)/.test(ua)) {
+	            browser.ver = RegExp["$1"];
+	            browser.safari = parseFloat(browser.ver);
+	        } else {
+	            //近似地确定版本号
+	            var safariVersion = 1;
+	            if (engine.webkit < 100) {
+	                safariVersion = 1;
+	            } else if (engine.webkit < 312) {
+	                safariVersion = 1.2;
+	            } else if (engine.webkit < 412) {
+	                safariVersion = 1.3;
+	            } else {
+	                safariVersion = 2;
+	            }
+	            browser.safari = browser.ver = safariVersion;
+	        }
+	    } else if (/KHTML\/(\S+)/.test(ua) || /Konqueror\/([^;]+)/.test(ua)) {
+	        engine.ver = browser.ver = RegExp["$1"];
+	        engine.khtml = browser.konq = parseFloat(engine.ver);
+	    } else if (/rv:([^\)]+)\) Gecko\/\d{8}/.test(ua)) {
+	        engine.ver = RegExp["$1"];
+	        engine.gecko = parseFloat(engine.ver);
+
+	        if (/Firefox\/(\S+)/.test(ua)) {
+	            browser.ver = RegExp["$1"];
+	            browser.firefox = parseFloat(browser.ver);
+	        }
+	    } else if (/MSIE ([^;]+)/.test(ua)) {
+	        engine.ver = browser.ver = RegExp["$1"];
+	        engine.ie = browser.ie = parseFloat(engine.ver);
+	    }
+
+	    var p = navigator.platform;
+	    system.win = p.indexOf("Win") == 0;
+	    system.mac = p.indexOf("Mac") == 0;
+	    system.x11 = p == "X11" || p.indexOf("Linux") == 0;
+
+	    if (system.win) {
+	        if (/Win(?:dows )?([^do]{2})\s?(\d+\.\d+)?/.test(ua)) {
+	            if (RegExp["$1"] == "NT") {
+	                switch (RegExp["$2"]) {
+	                    case "5.0":
+	                        system.win = "2000";
+	                        break;
+	                    case "5.1":
+	                        system.win = "XP";
+	                        break;
+	                    case "6.0":
+	                        system.win = "Vista";
+	                        break;
+	                    case "6.1":
+	                        system.win = "7";
+	                        break;
+	                    default:
+	                        system.win = "NT";
+	                        break;
+	                }
+	            } else if (RegExp["$1"] == '9x') {
+	                system.win = "ME";
+	            } else {
+	                system.win = RegExp["$1"];
+	            }
+	        }
+	    }
+
+	    system.iphone = ua.indexOf("iPhone") > -1;
+	    system.ipod = ua.indexOf("iPod") > -1;
+	    system.ipad = ua.indexOf("iPad") > -1;
+	    system.nokiaN = ua.indexOf("NokiaN") > -1;
+	    if (system.win == "CE") {
+	        system.winMobile = system.win;
+	    } else if (system.win == "Ph") {
+	        if (/Windows Phone OS (\d+\.\d+)/.test(ua)) {
+	            system.win = "Phone";
+	            system.winMobile = parseFloat(RegExp["$1"]);
+	        }
+	    }
+	    if (system.mac && ua.indexOf("Mobile") > -1) {
+	        if (/CPU (?:iPhone )?OS (\d+_\d+)/.test(ua)) {
+	            system.ios = parseFloat(RegExp["$1"].replace("_", "."));
+	        } else {
+	            system.ios = 2; //近似
+	        }
+	    }
+	    if (/Android (\d+\.\d+)/.test(ua)) {
+	        system.android = parseFloat(RegExp["$1"]);
+	    }
+	    system.wii = ua.indexOf("Wii") > -1;
+	    system.ps = /playstation/i.test(ua);
+
+	    return {
+	        engine: engine,
+	        browser: browser,
+	        system: system
+	    };
+	};
+
+	exports.default = Client;
+
+/***/ }),
+/* 338 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _ajax = __webpack_require__(334);
+
+	var _ajax2 = _interopRequireDefault(_ajax);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Interface = function () {
+	    function Interface() {
+	        _classCallCheck(this, Interface);
+	    }
+
+	    _createClass(Interface, [{
+	        key: 'loginAjax',
+	        value: function loginAjax(body) {
+	            return _ajax2.default.post({ url: '/users/login', "body": body });
+	        }
+	    }, {
+	        key: 'registerAjax',
+	        value: function registerAjax(body) {
+	            return _ajax2.default.post({ url: '/users/register', "body": body });
+	        }
+	    }]);
+
+	    return Interface;
+	}();
+
+	exports.default = Interface;
 
 /***/ })
 /******/ ]);
