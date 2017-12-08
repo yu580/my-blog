@@ -11,15 +11,13 @@ router.use(function (req, res, next) {
     };
     return next();
 });
-/**
- * 注册接口
- */
-router.post('/login', function (req, res, next) {
-    console.log(req.body.username)
-    res.json(responseData)
-    return
-});
-console.log('123')
+
+//用户注册
+/*
+* 用户名不能为空，
+* 密码不能为空
+* 密码需要一致
+* 用户名是否被注册*/
 router.post('/register', function (req, res, next) {
     var username = req.body.username;
     var password = req.body.password;
@@ -45,7 +43,6 @@ router.post('/register', function (req, res, next) {
         res.json(responseData);
         return
     }
-    
     //用户名是否被注册
     User.findOne({
         username: username
@@ -64,12 +61,48 @@ router.post('/register', function (req, res, next) {
         });
         return user.save();
     }).then(function (newUser) {
-        if(!newUser){
+        if (!newUser) {
             return
         }
         responseData.message = "注册成功"
         res.json(responseData);
         return
+    })
+});
+
+/**
+ * 注册接口
+ */
+router.post('/login', function (req, res, next) {
+    var username = req.body.username;
+    var password = req.body.password;
+    if (username == "" || password == "") {
+        responseData.code = 1;
+        responseData.message = "用户名和密码不能为空！";
+        res.json(responseData);
+        return;
+    }
+    User.findOne({
+        username: username,
+        password: password
+    }).then(function (userInfo) {
+        if (!userInfo) {
+            responseData.code = 2;
+            responseData.message = "用户名或密码错误";
+            res.json(responseData);
+            return;
+        }
+        responseData.message = "登录成功";
+        responseData.userInfo = {
+            _id: userInfo._id,
+            username: userInfo.username
+        };
+        res.cookie('userInfo', {
+            _id: userInfo._id,
+            username: userInfo.username
+        }, { expires: new Date(Date.now() + 1000 * 60 * 60)});
+        res.json(responseData);
+        return;
     })
 });
 

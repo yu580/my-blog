@@ -10073,6 +10073,14 @@
 	            this.registerAjax(formData);
 	        }
 	    }, {
+	        key: 'clickLogin',
+	        value: function clickLogin() {
+	            var formData = {};
+	            formData.username = (0, _yquery2.default)('input[name="loginAccount"]').value();
+	            formData.password = (0, _yquery2.default)('input[name="loginPassword"]').value();
+	            this.loginAjax(formData);
+	        }
+	    }, {
 	        key: 'register',
 	        value: function register() {
 	            (0, _yquery2.default)('.login-form').addClass('hide');
@@ -10105,6 +10113,8 @@
 	                this.entry();
 	            } else if (target.id === 'register') {
 	                this.clickResgister();
+	            } else if (target.id === 'login') {
+	                this.clickLogin();
 	            }
 	            this.activeEle();
 	        }
@@ -10251,7 +10261,7 @@
 	        fetchPromise = request(option.url, config);
 	    }
 	    if (!config.timeout) {
-	        config.timeout = 1000 * 4; //设置默认超时时间
+	        config.timeout = 1000 * 60; //设置默认超时时间
 	    }
 	    var timeoutPromise = new Promise(function (resolve, reject) {
 	        setTimeout(function () {

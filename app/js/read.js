@@ -29,13 +29,7 @@ class Read extends mix(Login, Base, Interface) {
         // this.initEVent()
     }
     initStatus(){
-        this.loginAjax({username:"yu580",password:"123",repassword:"123"})
-            .then(function(res){
-                log(res)
-            })
-            .catch(function(res){
-                log('123')
-            })
+       
     }
     initEVent(){
         let _this = this

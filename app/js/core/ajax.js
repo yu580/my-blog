@@ -98,7 +98,7 @@ window.fetch = function (option) {
         fetchPromise = request(option.url, config);
     }
     if (!config.timeout) {
-        config.timeout = 1000 * 4 //设置默认超时时间
+        config.timeout = 1000 * 60 //设置默认超时时间
     }
     var timeoutPromise = new Promise(function (resolve, reject) {
         setTimeout(() => {

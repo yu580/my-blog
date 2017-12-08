@@ -70,6 +70,12 @@ class Login {
         formData.repassword = $('input[name="RePassword"]').value()
         this.registerAjax(formData)
     }
+    clickLogin(){
+        let formData = {}
+        formData.username = $('input[name="loginAccount"]').value()
+        formData.password = $('input[name="loginPassword"]').value()
+        this.loginAjax(formData)
+    }
     register(){
         $('.login-form').addClass('hide');
         $('.register-form').removeClass('hide');
@@ -97,6 +103,8 @@ class Login {
             this.entry();
         }else if(target.id === 'register'){
             this.clickResgister()
+        }else if(target.id === 'login'){
+            this.clickLogin()
         }
         this.activeEle();
     }

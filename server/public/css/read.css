@@ -532,6 +532,9 @@ body header nav .nav-list li a span.en {
   transition: transform 0.3s, opacity 0.3s;
   transform: translateY(-100%);
 }
+body header nav .login-btn {
+  cursor: pointer;
+}
 body article {
   width: 1000px;
   margin: 0 auto;
